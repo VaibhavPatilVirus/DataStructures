@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+/x64
+/.vs
+/Trees/BinaryTree/Debug
+/Trees/BinaryTree/x64/Debug
