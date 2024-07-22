@@ -65,7 +65,7 @@ namespace BinaryTree
             queue.push(root);
             while (!queue.empty())
             {
-                Node* curNode = queue.front();
+                Node<T>* curNode = queue.front();
                 queue.pop();
                 list.push_back(curNode->val);
                 if (curNode->left)
@@ -114,33 +114,120 @@ namespace BinaryTree
         if (!root) return 0;
         return (root->val + treeSumUsingDepthFirstUsingRecusion(root->left) + treeSumUsingDepthFirstUsingRecusion(root->right));
     }
+
+    template<typename T>
+    void printList(std::list<T> listIn)
+    {
+        for (auto data : listIn)
+            std::cout << data << std::endl;
+    }
+    template<typename T>
+    Node<T>* createBinaryTree(const std::list<T>& listIn)
+    {
+        std::queue<Node<T>*> stack;
+        Node<T>* rootNode = nullptr;
+        for (auto data: listIn)
+        {
+            if (rootNode == nullptr)
+            {
+                rootNode = new Node<T>(data);
+                stack.push(rootNode);
+            }
+            else
+            {
+                Node<T>* nodeToAppend = stack.front();
+                Node<T>* newNode = new Node<T>(data);
+                if (nodeToAppend->left == nullptr)
+                    nodeToAppend->left = newNode;
+                else if (nodeToAppend->right == nullptr)
+                {
+                    nodeToAppend->right = newNode;
+                    stack.pop();
+                }
+                stack.push(newNode);
+            }
+        }
+        return rootNode;
+    }
+
+    template <typename T>
+    Node<T>* addNode(Node<T>* root, Node<T>* newNode)
+    {
+        if (root == nullptr)
+            return newNode;
+
+        std::queue<Node<T>*> queue;
+        queue.push(root);
+        while (!queue.empty())
+        {
+            Node<T>* exitingNode = queue.front();
+            if (exitingNode->left == nullptr)
+            {
+                exitingNode->left = newNode;
+                break;
+            }
+            else
+                queue.push(exitingNode->left);
+            
+            if (exitingNode->right == nullptr)
+            {
+                exitingNode->right = newNode;
+                break;
+            }
+            else
+            {
+                queue.push(exitingNode->right);
+                queue.pop();
+            }
+        }
+    
+        return root;
+    }
+
+    template <typename T>
+    Node<T>* addNode(Node<T>* root,const T& dataIn)
+    {
+        return addNode(root, new Node<T>(dataIn));
+    }
+
+    template <typename T>
+    void deleteNode(Node<T>* root, int pos)
+    {
+        if (root == nullptr) return;
+
+
+    }
 };
 
 using namespace BinaryTree;
 
 void main()
 {
-    Node<int> A(1);
-    Node<int> B(2);
-    Node<int> C(3);
-    Node<int> D(4);
-    Node<int> E(5);
-    Node<int> F(6);
-    Node<int> G(7);
+    //Node<int> A(1);
+    //Node<int> B(2);
+    //Node<int> C(3);
+    //Node<int> D(4);
+    //Node<int> E(5);
+    //Node<int> F(6);
+    //Node<int> G(7);
 
-    A.left = &B;
-    A.right = &C;
-    B.left = &D;
-    //B.right = &E;
-    //C.left = &F;
-    //C.right = &G;
+    //A.left = &B;
+    //A.right = &C;
+    //B.left = &D;
+    ////B.right = &E;
+    ////C.left = &F;
+    ////C.right = &G;
 
-    int isAvailable = treeSumUsingDepthFirstUsingRecusion(&A);
-    std::cout << isAvailable << std::endl;
+    /*int isAvailable = treeSumUsingDepthFirstUsingRecusion(&A);
+    std::cout << isAvailable << std::endl;*/
 
-    //std::list<const char*> dataOut = breadthFirstTraversingUsingQueue(&A);
-
-    /*for (auto data : dataOut)
-        std::cout << data << std::endl;*/
+    std::list<int> list = { 1,2 };
+    Node<int>* binaryTree = createBinaryTree(list);
+    
+    binaryTree = addNode(binaryTree, 3);
+    binaryTree = addNode(binaryTree, 4);
+    //binaryTree = addNode(binaryTree, 5);
+    binaryTree = addNode(binaryTree, 6);
+    std::list<int> dataOut = breadthFirstTraversingUsingQueue(binaryTree);
 }
 
